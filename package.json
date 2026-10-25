@@ -1,0 +1,8 @@
+{
+  "name": "casa-3d",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build" },
+  "dependencies": { "lil-gui": "^0.20.0", "three": "^0.170.0" },
+  "devDependencies": { "vite": "^6.0.0" }
+}

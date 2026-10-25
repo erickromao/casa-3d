@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa 3D</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,sans-serif;background:#222}
+  canvas{display:block}
+  #bar{position:fixed;left:12px;bottom:12px;display:flex;gap:8px;flex-wrap:wrap}
+  #bar button{padding:8px 12px;border:0;border-radius:6px;background:#2d6a4f;color:#fff;cursor:pointer;font-size:14px}
+  #bar button:hover{background:#40916c}
+  #help{position:fixed;left:12px;top:12px;color:#fff;background:#0007;padding:8px 12px;border-radius:6px;font-size:13px;line-height:1.5}
+</style>
+</head>
+<body>
+<div id="help"><b>Órbita:</b> arrastar = girar · botão direito = mover · scroll = zoom<br>
+<b>Caminhar:</b> botão "Caminhar", WASD + mouse, Esc sai<br>
+<b>Móveis:</b> clique e arraste · R gira · Delete remove</div>
+<div id="bar"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
