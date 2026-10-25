@@ -1,0 +1,8 @@
+{
+  "appId": "com.erick.casa3d",
+  "appName": "Casa 3D",
+  "webDir": "dist",
+  "backgroundColor": "#222222",
+  "ios": { "contentInset": "never" },
+  "android": { "allowMixedContent": false }
+}

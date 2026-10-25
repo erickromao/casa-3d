@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Casa 3D</title>
 <style>
   html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,sans-serif;background:#222}
@@ -11,12 +11,24 @@
   #bar button{padding:8px 12px;border:0;border-radius:6px;background:#2d6a4f;color:#fff;cursor:pointer;font-size:14px}
   #bar button:hover{background:#40916c}
   #help{position:fixed;left:12px;top:12px;color:#fff;background:#0007;padding:8px 12px;border-radius:6px;font-size:13px;line-height:1.5}
+  html,body{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
+  #joy{display:none;position:fixed;width:110px;height:110px;border-radius:50%;background:#fff3;border:2px solid #fff6;pointer-events:none}
+  #joyPino{position:absolute;left:30px;top:30px;width:50px;height:50px;border-radius:50%;background:#fffa}
+  #menuBtn{position:fixed;right:max(12px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));width:44px;height:44px;border:0;border-radius:8px;background:#2d6a4fcc;color:#fff;font-size:22px;z-index:5}
+  #bar.mob{display:none;left:auto;bottom:auto;right:max(12px,env(safe-area-inset-right));top:max(64px,calc(env(safe-area-inset-top) + 52px));flex-direction:column;z-index:5}
+  #bar.mob.aberta{display:flex}
+  .vooBtn{display:none;position:fixed;right:max(16px,env(safe-area-inset-right));width:56px;height:56px;border:0;border-radius:50%;background:#2d6a4fcc;color:#fff;font-size:24px;z-index:5}
+  #subir{bottom:90px}#descer{bottom:24px}
+  body.voando .vooBtn{display:block}
+  @media (pointer:fine){body.voando .vooBtn{display:none}}
+  .lil-gui.root{z-index:4;top:max(12px,env(safe-area-inset-top))!important;right:72px!important}
 </style>
 </head>
 <body>
-<div id="help"><b>Órbita:</b> arrastar = girar · botão direito = mover · scroll = zoom<br>
-<b>Caminhar:</b> botão "Caminhar", WASD + mouse, Esc sai<br>
-<b>Móveis:</b> clique e arraste · R gira · Delete remove</div>
+<div id="help"><b>Andar:</b> W A S D ou setas (← → giram) · Shift corre · arrastar o mouse = olhar<br>
+<b>Voar:</b> botão Voar · mouse/W A S D na direção do olhar · Espaço sobe, C desce<br>
+<b>Botões:</b> Vista aérea / Frente (órbita: arrastar, scroll) · Manhã … Noite<br>
+<b>Ajustes</b> (canto direito): girar céu, grama, cores</div>
 <div id="bar"></div>
 <script type="module" src="/src/main.js"></script>
 </body>
