@@ -10,6 +10,15 @@ import { criarToque, ehMobile } from './toque.js'
 import { criarTerreno, criarGrama, alturaTerreno, definirZona } from './terreno.js'
 
 // ---------- renderer / cena ----------
+// mostra erros na tela (útil no celular, onde não há console)
+const logErro = m => {
+  let el = document.getElementById('erros')
+  if (!el) { el = document.createElement('pre'); el.id = 'erros'; el.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;max-height:40%;overflow:auto;margin:0;padding:8px;background:#400c;color:#fff;font:11px monospace;z-index:9;white-space:pre-wrap'; document.body.appendChild(el) }
+  el.textContent += m + '\n'
+}
+const ce = console.error; console.error = (...a) => { ce(...a); logErro('console: ' + a.join(' ').slice(0, 400)) }
+addEventListener('error', e => logErro('ERRO: ' + e.message))
+addEventListener('unhandledrejection', e => logErro('ERRO: ' + (e.reason?.message || e.reason)))
 // perfil leve no celular (sombras menores, menos grama, sem antialias nativo)
 const PERF = ehMobile ? { sombra: 2048, pr: 1.5, grama: 20000, aa: false } : { sombra: 4096, pr: 1.75, grama: 90000, aa: true }
 const renderer = new THREE.WebGLRenderer({ antialias: PERF.aa, powerPreference: 'high-performance', preserveDrawingBuffer: !ehMobile })
@@ -24,6 +33,9 @@ const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(65, innerWidth / innerHeight, 0.05, 1500)
 camera.rotation.order = 'YXZ'
 
+const gl = renderer.getContext()
+console.log('GPU', gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), 'units;', gl.getParameter(gl.MAX_TEXTURE_SIZE), 'px')
+renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); logErro('WebGL perdeu o contexto (memória da GPU)') })
 const mat = criarMateriais()
 const maxAniso = renderer.capabilities.getMaxAnisotropy()
 for (const m of Object.values(mat)) for (const k of ['map', 'normalMap', 'roughnessMap', 'aoMap']) if (m[k]) m[k].anisotropy = maxAniso
@@ -263,8 +275,12 @@ function loop() {
   const dt = Math.min(relogio.getDelta(), 0.1)
   grama.userData.uTime.value += dt; pessoas.update(relogio.elapsedTime, dt)
   if (modo === 'andar') atualizarAndar(dt); else orbit.update()
-  renderer.render(scene, camera)
+  try { renderer.render(scene, camera) } catch (e) { logErro('render: ' + e.message) }
   requestAnimationFrame(loop)
 }
 window.__cena = { setTeto, camera, jogador, setModo, E, aplicarPeriodo, scene, orbit }   // para depuração
-aplicarPeriodo().then(() => { document.getElementById('help').style.display = ehMobile ? 'none' : 'block'; setModo('andar'); loop() })
+// o céu pode falhar em alguns celulares: mostra o erro, usa luz de reserva e desenha a casa mesmo assim
+aplicarPeriodo().catch(e => {
+  logErro('Céu falhou: ' + (e?.message || e))
+  scene.background = new THREE.Color(0x9ec5e8); scene.add(new THREE.HemisphereLight(0xffffff, 0x556644, 2.2))
+}).then(() => { document.getElementById('help').style.display = ehMobile ? 'none' : 'block'; setModo('andar'); loop() })
